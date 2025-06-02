@@ -14,14 +14,14 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:22-jdk 
 
-COPY --from=buildstage /app/target/bdget-0.0.1-SNAPSHOT.jar /app/bdget.jar
+COPY --from=buildstage /app/target/microservicio-0.0.1-SNAPSHOT.jar /app/microservicio.jar
 
 COPY Wallet_J4MXCG39LLG5V7MK /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 EXPOSE 8080
 
-ENTRYPOINT [ "java", "-jar","/app/bdget.jar" ]
+ENTRYPOINT [ "java", "-jar","/app/microservicio.jar" ]
 
 
 
