@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY src /app/src
-COPY Wallet_N72BZHZWYZGTE7OH /app/wallet
+COPY Wallet_J4MXCG39LLG5V7MK /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 
@@ -16,7 +16,7 @@ FROM eclipse-temurin:22-jdk
 
 COPY --from=buildstage /app/target/bdget-0.0.1-SNAPSHOT.jar /app/bdget.jar
 
-COPY Wallet_N72BZHZWYZGTE7OH /app/wallet
+COPY Wallet_J4MXCG39LLG5V7MK /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 EXPOSE 8080
