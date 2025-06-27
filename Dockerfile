@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY pom.xml .
 COPY src /app/src
-COPY Wallet_ISES6C5I8JPYNO4S /app/wallet
+COPY Wallet_K96P9X26UTNPTUSC /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 
@@ -16,7 +16,7 @@ FROM eclipse-temurin:22-jdk
 
 COPY --from=buildstage /app/target/microservicio-0.0.1-SNAPSHOT.jar /app/microservicio.jar
 
-COPY Wallet_ISES6C5I8JPYNO4S /app/wallet
+COPY Wallet_K96P9X26UTNPTUSC /app/wallet
 
 ENV TNS_ADMIN=/app/wallet
 

@@ -1,5 +1,7 @@
 package com.example.bdget.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,8 +87,29 @@ public class BoletaServiceImp implements BoletaService{
 		boleta.setSubtotal(subtotal);
 		boleta.setTotal(subtotal * 1.19);
 
-		return boletaRepository.save(boleta);
+		// Guardar en la base de datos
+		Boleta boletaGuardada = boletaRepository.save(boleta);
+
+		// Generar PDF
+		byte[] pdfBytes = pdfService.generarBoletaPDF(boletaGuardada);
+
+		// Crear ruta en S3: /cliente{id}/{YYYY-MM}/boleta{id}.pdf
+		String clienteId = "cliente" + cliente.getClienteId();
+		String mesAnio = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+		String filename = "boleta" + boletaGuardada.getBoletaId() + ".pdf";
+		String s3Key = clienteId + "/" + mesAnio + "/" + filename;
+
+		// Subir a S3
+		s3UploaderService.subirBoletaPDF(pdfBytes, cliente.getClienteId().toString(), boletaGuardada.getBoletaId());
+
+		return boletaGuardada;
 	}
+
+	@Autowired
+	private PDFService pdfService;
+
+	@Autowired
+	private S3UploaderService s3UploaderService;
 
 
 }
