@@ -5,7 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,8 +39,8 @@ public class Boleta {
 		this.cliente = cliente;
 	}
 
-	@OneToMany(mappedBy = "boleta") // 'boleta' es el nombre del campo en la entidad Producto
-	private List<Producto> productos = new ArrayList<>(); // Ahora guardamos una lista de objetos Producto, no solo sus IDs
+	@OneToMany(mappedBy = "boleta", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Producto> productos = new ArrayList<>();
 
 	public Boleta(List<Producto> productos, double total, int subtotal, Long boletaId) {
 		this.productos = productos;

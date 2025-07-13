@@ -11,6 +11,7 @@ public interface BoletaService {
 	Boleta actualizarBoleta(Boleta boleta);
 	List<Boleta> obtenerBoletasPorCliente(Long clienteId);
 	Boleta procesarBoletaDesdeDto(BoletaRequestDto boletaDto);
-
+	Boleta obtenerBoletaConProductosPorId(Long boletaId);
+	
 
 }

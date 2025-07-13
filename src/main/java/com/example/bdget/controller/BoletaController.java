@@ -1,5 +1,7 @@
 package com.example.bdget.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.bdget.dto.BoletaRequestDto;
 import com.example.bdget.entity.Boleta;
 import com.example.bdget.service.BoletaService;
+import com.example.bdget.service.PDFService;
 import com.example.bdget.service.S3UploaderService;
 
 @Controller
@@ -27,11 +30,13 @@ public class BoletaController {
 
 	private final BoletaService boletaService;
 	private final S3UploaderService s3UploaderService;
+	private final PDFService pdfService;
 
 	@Autowired
-	public BoletaController(BoletaService boletaService, S3UploaderService s3UploaderService) {
+	public BoletaController(BoletaService boletaService, S3UploaderService s3UploaderService, PDFService pdfService) {
 		this.boletaService = boletaService;
 		this.s3UploaderService = s3UploaderService;
+		this.pdfService = pdfService;
 	}
 
 	@PostMapping("/procesar")
@@ -44,6 +49,27 @@ public class BoletaController {
 	public ResponseEntity<Boleta> actualizarBoleta(@PathVariable Long id, @RequestBody Boleta boletaActualizada) {
 		boletaActualizada.setBoletaId(id);
 		Boleta boleta = boletaService.actualizarBoleta(boletaActualizada);
+		return ResponseEntity.ok(boleta);
+	}
+
+	@PutMapping("/actualizar-con-pdf/{id}")
+	public ResponseEntity<Boleta> actualizarBoletaConPdf(@PathVariable Long id, @RequestBody Boleta boletaActualizada) {
+		boletaActualizada.setBoletaId(id);
+		Boleta boleta = boletaService.actualizarBoleta(boletaActualizada);
+
+		try {
+			Boleta boletaRecargada = boletaService.obtenerBoletaConProductosPorId(id);
+			byte[] pdfBytes = pdfService.generarBoletaPDF(boletaRecargada);
+
+			String clienteId = boletaRecargada.getCliente().getClienteId().toString();
+			String anioMes = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+			String key = String.format("cliente%s/%s/boleta%d.pdf", clienteId, anioMes, id);
+
+			s3UploaderService.subirBoletaPDF(pdfBytes, key);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+
 		return ResponseEntity.ok(boleta);
 	}
 

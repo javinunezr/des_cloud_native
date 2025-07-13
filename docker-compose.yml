@@ -1,0 +1,43 @@
+version: '3'
+services:
+  rabbitmq1:
+    image: rabbitmq:3-management
+    hostname: rabbitmq1
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'mysecretcookie'
+    networks:
+      - rabbitmq
+      - ms-grupo6
+
+  rabbitmq2:
+    image: rabbitmq:3-management
+    hostname: rabbitmq2
+    ports:
+      - "15673:15672"
+      - "5673:5672"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'mysecretcookie'
+    networks:
+      - rabbitmq
+      - ms-grupo6
+    depends_on:
+      - rabbitmq1
+    command: >
+      sh -c "
+      rabbitmq-server -detached &&
+      sleep 10 &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl reset &&
+      rabbitmqctl join_cluster rabbit@rabbitmq1 &&
+      rabbitmqctl start_app &&
+      tail -f /var/log/rabbitmq/rabbit@rabbitmq2.log || tail -f /dev/null"
+
+
+networks:
+  rabbitmq:
+    driver: bridge
+  ms-grupo6:
+    driver: bridge

@@ -1,8 +1,0 @@
-k96p9x26utnptusc_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=gd7d854551770a2_k96p9x26utnptusc_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
-
-k96p9x26utnptusc_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=gd7d854551770a2_k96p9x26utnptusc_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
-
-k96p9x26utnptusc_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=gd7d854551770a2_k96p9x26utnptusc_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
-
-
-

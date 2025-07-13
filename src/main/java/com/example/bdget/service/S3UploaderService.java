@@ -1,8 +1,5 @@
 package com.example.bdget.service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +26,7 @@ public class S3UploaderService {
             .build();
     }
 
-    public void subirBoletaPDF(byte[] contenidoPdf, String clienteId, Long boletaId) {
-        String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
-        String key = String.format("cliente%s/%s/boleta%d.pdf", clienteId, fecha, boletaId);
-
+    public void subirBoletaPDF(byte[] contenidoPdf, String key) {
         s3Client.putObject(
             PutObjectRequest.builder()
                 .bucket(bucketName)
